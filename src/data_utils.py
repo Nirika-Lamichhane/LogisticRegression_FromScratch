@@ -33,4 +33,5 @@ def generate_3d_Datas(
     ))
     return x,y
 
-# hstack and vstack requires the single argument as a tuple or list of arrays to be stacked, so we have to put the arrays in the tuple or list.
+# hstack and vstack requires the single argument as a tuple or list of arrays to be stacked, so we have to put the arrays in the tuple or list. 
+# 3d datas are created and can be accesed from the main file.
