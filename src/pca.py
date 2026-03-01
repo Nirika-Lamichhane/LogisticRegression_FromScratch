@@ -15,7 +15,7 @@ def covariance_matrix (X_centered : np.ndarray):
 
 def eiggen_decompostition(cov_matrix):
 
-    eigenvalues, eigenvectors = np.linalg.eigh(cov_matrix)
+    eigenvalues, eigenvectors = np.linalg.eigh(cov_matrix) # this gives the normalized i.e. unit vectors so we are projecting onto unit eigenvectors
 
     idx = np.argsort(eigenvalues)[::-1]
     eigenvalues = eigenvalues [idx]
