@@ -1,14 +1,23 @@
 # src/main.py
 import numpy as np
 from data_utils import generate_3d_Datas
-from pca import center_data
+from pca import center_data, covariance_matrix, eiggen_decompostition, final_projection
 
 X,y = generate_3d_Datas()
-print("Original Data Shape:", X.shape)
-print("First 5 samples:\n", X[:5])
-print("Labels:\n", y[:5])
 
-# 2️⃣ Center the data
 X_centered, mean = center_data(X)
-print("\nCentered Data (first 5 samples):\n", X_centered[:5])
-print("Feature means (should be ~0):", np.mean(X_centered, axis=0))
+
+cov_matrix = covariance_matrix(X_centered)
+
+eigenvalues, eigenvectors = eiggen_decompostition(cov_matrix)
+
+X_pca = final_projection(X_centered, eigenvectors, n_components=2)
+
+
+print("original shape of dataset:",X.shape)
+print(" centered shape :", X_centered.shape)
+print("covariance matrix shape:", cov_matrix.shape)
+print("eigenvalues shape:", eigenvalues.shape)
+print("eigenvectors shape:", eigenvectors.shape)
+print(" top 2 eigenvectrs: \n ",eigenvectors[:,:2])
+print("final projected shape:", X_pca.shape)
