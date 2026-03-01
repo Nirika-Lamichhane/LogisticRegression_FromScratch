@@ -12,4 +12,7 @@ def center_data (X : np.ndarray):
 
 '''
 X :np.ndarray is just for the documentation purpose and to make the IDE autocomplete 
+It is python's type hint syntax as:
+def function_name (variable_name : expected_type):
+
 '''
