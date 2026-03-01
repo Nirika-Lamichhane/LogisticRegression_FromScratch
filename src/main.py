@@ -1,5 +1,6 @@
 # src/main.py
 import numpy as np
+from sklearn.linear_model import LogisticRegression
 from data_utils import generate_3d_Datas
 from pca import center_data, covariance_matrix, eiggen_decompostition, final_projection
 
@@ -14,10 +15,15 @@ eigenvalues, eigenvectors = eiggen_decompostition(cov_matrix)
 X_pca = final_projection(X_centered, eigenvectors, n_components=2)
 
 
-print("original shape of dataset:",X.shape)
-print(" centered shape :", X_centered.shape)
-print("covariance matrix shape:", cov_matrix.shape)
-print("eigenvalues shape:", eigenvalues.shape)
-print("eigenvectors shape:", eigenvectors.shape)
-print(" top 2 eigenvectrs: \n ",eigenvectors[:,:2])
-print("final projected shape:", X_pca.shape)
+from logistic_regression import logisticregression
+
+# Train model
+model = logisticregression(learning_rate=0.1, n_iters=2000)
+model.fit(X_pca, y)
+
+# Predict
+predictions = model.presiction(X_pca)
+
+# Accuracy
+accuracy = np.mean(predictions == y)
+print("Accuracy:", accuracy)
