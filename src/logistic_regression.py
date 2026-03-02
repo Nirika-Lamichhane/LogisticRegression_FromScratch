@@ -27,7 +27,7 @@ class logisticregression:
 
             self.weights-=self.lr*dw
             self.bias-=self.lr*db
-
+# here decision boundary is 0.5, if the predicted value is greater than or equal to 0.5 then we will classify it as 1 otherwise 0
     def presiction(self, X):
         linear_model = np.dot(X, self.weights)+self.bias
         y_predicted = self.sigmoid(linear_model)
