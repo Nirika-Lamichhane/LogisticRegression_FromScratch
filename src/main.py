@@ -22,7 +22,7 @@ model = logisticregression(learning_rate=0.1, n_iters=2000)
 model.fit(X_pca, y)
 
 # Predict
-predictions = model.presiction(X_pca)
+predictions = model.prediction(X_pca)
 
 # Accuracy
 accuracy = np.mean(predictions == y)

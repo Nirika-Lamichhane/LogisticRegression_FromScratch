@@ -28,7 +28,8 @@ class logisticregression:
             self.weights-=self.lr*dw
             self.bias-=self.lr*db
 # here decision boundary is 0.5, if the predicted value is greater than or equal to 0.5 then we will classify it as 1 otherwise 0
-    def presiction(self, X):
+    def prediction(self, X):
         linear_model = np.dot(X, self.weights)+self.bias
         y_predicted = self.sigmoid(linear_model)
-        return np.where(y_predicted >= 0.5,1,0)
+        return np.where(y_predicted >= 0.5,1,0)  # this means if the predicted y is greater than 0.5 then it is class 1 otherwise class 0
+    
