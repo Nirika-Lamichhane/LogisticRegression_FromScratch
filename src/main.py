@@ -10,10 +10,11 @@ from mpl_toolkits.mplot3d import Axes3D
 X, y = generate_3d_Datas()
 
 fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+ax = fig.add_subplot(111, projection='3d')  # 111 means 1 row, 1 column and 1st subplot.
 ax.scatter(X[y == 0][:, 0], X[y == 0][:, 1], X[y == 0][:, 2]) # this is of class 0
 ax.scatter(X[y == 1][:, 0], X[y == 1][:, 1], X[y == 1][:, 2]) # this is of class 1
 plt.show()
+
 # [:, 0] means we are taking all the rows and only the first column, [:, 1] means we are taking all the rows and only the second column and [:, 2] means we are taking all the rows and only the third column. This is how we are plotting the 3D scatter plot for both classes.
 
 X_centered, mean = center_data(X)
