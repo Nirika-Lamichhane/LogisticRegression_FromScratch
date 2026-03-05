@@ -1,14 +1,15 @@
 # src/main.py
 import numpy as np
 from data_utils import generate_3d_Datas
-from pca import center_data, covariance_matrix, eigen_decomposition, final_projection  # FIXED: typo in eigen_decomposition
-from logistic_regression import logisticregression  # FIXED: moved to top with other imports
-import matplotlib.pyplot as plt 
+from pca import center_data, covariance_matrix, eigen_decomposition, final_projection  
+from logistic_regression import logisticregression 
 from sklearn.model_selection import train_test_split
+from visualization import plot_3d_data
 
 # data generation
 X, y = generate_3d_Datas()
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+plot_3d_data(X, y) 
 
 # centering using train data only
 X_train_centered, mean = center_data(X_train)
