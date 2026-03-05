@@ -322,7 +322,7 @@ As, I have used **np.random.randn** to create the 3d dataset and its cluster spr
 separation = distance between centers / spread of clusters
 So, as the spread of clusters is less and maybe only 2 5 points out of 1000 cross the boundary so accuracy tends to be 100 percentage.
 
-### Solution / Approach I took to solve this,
+### Solution 
 - I reduced the mean offset to 0.8 which reduced the test accuracy to 0.95, this is not such significant drop as per the offset i.e. from 2 to 0.8 (not in same ratio but still acceptable) cause the relationship between mean_offset and accuracy is **S-curve**.
 
 - To solve the problem of the spreading, we can manually or explicilty control the spread by multiplying the spread value to the clusters of datasets as : 
@@ -332,3 +332,70 @@ cluster_1 = np.random.randn(n_samples, 3) * spread  # tighter cluster
 cluster_1 = np.random.randn(n_samples, 3) * 2.0     # wider cluster
 
 randn was used for the default and convience default to work in the standard baseline.
+
+
+2. PCA direction arrows were invisible in the visualization because arrow length
+was scaled only by sqrt(eigenvalue) which gave lengths of ~1 unit while the 
+data cloud spanned -4 to +4 (8 units wide).
+
+### Solution
+Scaled arrow length by additional factor of 2.5:
+arrow_length = np.sqrt(eigenvalues[i]) * 2.5
+
+The data range of -4 to +4 is not hardcoded anywhere — it emerges naturally from:
+data range = mean_offset ± (3 × spread) = 0.8 ± (3 × 1) ≈ ±4
+This is the 3-sigma rule of gaussian distribution.
+
+3. Original code trained and evaluated on the same data causing data leakage
+and artificially inflated accuracy, model was being tested on data it already
+memorized during training.
+
+### Solution
+Applied train/test split (80/20) and enforced a critical rule:
+- Compute mean and eigenvectors from training data ONLY
+- Apply that SAME transformation to test data using training mean and eigenvectors
+- This prevents data leakage and gives honest accuracy measurement
+
+
+# Key Learnings
+
+**On Data:**
+- Synthetic data quality directly determines model performance
+- spread and gaussian distribution are inseparable, standard deviation defines
+  the width of the bell curve
+- mean_offset and accuracy follow an S-curve relationship, not a linear one
+
+**On PCA:**
+- Centering is mandatory, without it eigenvectors point toward origin not true spread
+- Eigenvalues directly encode how much variance each direction captures
+- Dropping components with low eigenvalues loses very little real information
+- The same PCA transformation learned on train must be applied to test
+
+**On Logistic Regression:**
+- It is purely projection + thresholding, w defines the projection direction
+- Decision boundary is a line where w^T*z + b = 0
+- Evaluating on training data is meaningless so always evaluate on unseen test data
+
+**On the Connection Between Both:**
+- PCA finds direction of maximum variance (unsupervised)
+- Logistic Regression finds direction of maximum separation (supervised)
+- Both are fundamentally geometric projection operations
+
+
+# How to Run
+
+1. Clone the repository
+2. Install dependencies:
+```bash
+pip install numpy matplotlib scikit-learn
+```
+3. Navigate to the src folder:
+```bash
+cd src
+```
+4. Run the pipeline:
+```bash
+python main.py
+```
+
+All 8 visualizations will appear sequentially. Close each window to proceed to the next.
