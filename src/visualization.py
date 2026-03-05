@@ -210,3 +210,108 @@ def plot_margin(X_train_pca, y_train, model):
     ax.set_ylabel('PC2')
     ax.legend()
     plt.show()
+
+
+
+def plot_accuracy_comparison(X_train, X_test, y_train, y_test,
+                              X_train_pca, X_test_pca):
+    
+    from logistic_regression import logisticregression
+
+    # --- model 1: trained on raw 3D data ---
+    model_raw = logisticregression(learning_rate=0.1, n_iters=2000)
+    model_raw.fit(X_train, y_train)
+    predictions_raw = model_raw.prediction(X_test)
+    accuracy_raw = np.mean(predictions_raw == y_test)
+
+    # --- model 2: trained on PCA reduced 2D data ---
+    model_pca = logisticregression(learning_rate=0.1, n_iters=2000)
+    model_pca.fit(X_train_pca, y_train)
+    predictions_pca = model_pca.prediction(X_test_pca)
+    accuracy_pca = np.mean(predictions_pca == y_test)
+
+    # --- plot bar chart ---
+    fig, ax = plt.subplots(figsize=(7, 5))
+
+    bars = ax.bar(
+        ['Raw 3D Data', 'PCA 2D Data'],
+        [accuracy_raw, accuracy_pca],
+        color=['steelblue', 'coral'],
+        width=0.4
+    )
+
+    # add accuracy value on top of each bar
+    for bar, acc in zip(bars, [accuracy_raw, accuracy_pca]):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,  # x position = center of bar
+            bar.get_height() + 0.01,             # y position = just above bar
+            f'{acc:.3f}',                         # accuracy rounded to 3 decimals
+            ha='center', fontsize=12
+        )
+
+    ax.set_ylim(0, 1.1)
+    ax.set_ylabel('Accuracy')
+    ax.set_title('Accuracy: Before vs After PCA')
+    plt.tight_layout()
+    plt.show()
+
+    print(f"Raw 3D Accuracy:  {accuracy_raw:.3f}")
+    print(f"PCA 2D Accuracy:  {accuracy_pca:.3f}")
+
+
+def plot_variance_explained(eigenvalues):
+
+    total_variance = np.sum(eigenvalues)
+    variance_ratio = eigenvalues / total_variance * 100  # convert to percentage
+
+    # cumulative variance — how much is captured by PC1+PC2, PC1+PC2+PC3 etc
+    cumulative_variance = np.cumsum(variance_ratio)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+    # --- LEFT: individual variance per component ---
+    bars = ax1.bar(
+        [f'PC{i+1}' for i in range(len(eigenvalues))],
+        variance_ratio,
+        color=['steelblue', 'coral', 'lightgreen']
+    )
+
+    # add percentage on top of each bar
+    for bar, var in zip(bars, variance_ratio):
+        ax1.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 0.5,
+            f'{var:.1f}%',
+            ha='center', fontsize=12
+        )
+
+    ax1.set_ylabel('Variance Explained (%)')
+    ax1.set_title('Variance Explained per Component')
+    ax1.set_ylim(0, 100)
+
+    # --- RIGHT: cumulative variance ---
+    ax2.plot(
+        [f'PC{i+1}' for i in range(len(eigenvalues))],
+        cumulative_variance,
+        marker='o', color='steelblue', linewidth=2, markersize=8
+    )
+
+    # add percentage next to each point
+    for i, var in enumerate(cumulative_variance):
+        ax2.text(i, var + 1.5, f'{var:.1f}%', ha='center', fontsize=12)
+
+    # draw a horizontal line at 95% — common threshold for keeping components
+    ax2.axhline(95, color='red', linestyle='--', linewidth=1.5, label='95% threshold')
+
+    ax2.set_ylabel('Cumulative Variance Explained (%)')
+    ax2.set_title('Cumulative Variance Explained')
+    ax2.set_ylim(0, 110)
+    ax2.legend()
+
+    plt.suptitle('PCA Variance Analysis', fontsize=14)
+    plt.tight_layout()
+    plt.show()
+
+    # print the numbers clearly
+    for i, (var, cum) in enumerate(zip(variance_ratio, cumulative_variance)):
+        print(f"PC{i+1}: {var:.1f}% variance  |  cumulative: {cum:.1f}%")

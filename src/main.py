@@ -4,7 +4,7 @@ from data_utils import generate_3d_Datas
 from pca import center_data, covariance_matrix, eigen_decomposition, final_projection  
 from logistic_regression import logisticregression 
 from sklearn.model_selection import train_test_split
-from visualization import plot_3d_data, plot_pca, plot_3d_vs_2d, plot_decision_boundary, plot_weight_projection, plot_margin
+from visualization import plot_3d_data, plot_pca, plot_3d_vs_2d, plot_decision_boundary, plot_weight_projection, plot_margin,plot_accuracy_comparison, plot_variance_explained
 
 # data generation
 X, y = generate_3d_Datas(mean_offset=0.8)
@@ -18,6 +18,7 @@ X_train_centered, mean = center_data(X_train)
 cov_matrix = covariance_matrix(X_train_centered)
 eigenvalues, eigenvectors = eigen_decomposition(cov_matrix) 
 
+plot_variance_explained(eigenvalues)
 plot_pca(X_train, y_train, eigenvectors, eigenvalues, mean)
 
 X_train_pca = final_projection(X_train_centered, eigenvectors, n_components=2)  
@@ -40,6 +41,8 @@ plot_margin(X_train_pca, y_train, model)
 predictions = model.prediction(X_test_pca)  
 accuracy = np.mean(predictions == y_test)  
 print("Test Accuracy:", accuracy)
+
+plot_accuracy_comparison(X_train, X_test, y_train, y_test, X_train_pca, X_test_pca)
 
 '''
 accuracy = np.mean(predictions == y_test)  
