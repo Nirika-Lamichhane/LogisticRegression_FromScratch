@@ -13,7 +13,7 @@ def center_data (X : np.ndarray):
 def covariance_matrix (X_centered : np.ndarray):
     return np.cov(X_centered, rowvar=False) 
 
-def eiggen_decompostition(cov_matrix):
+def eigen_decompostition(cov_matrix):
 
     eigenvalues, eigenvectors = np.linalg.eigh(cov_matrix) # this gives the normalized i.e. unit vectors so we are projecting onto unit eigenvectors
 
@@ -69,8 +69,8 @@ np.argsort()[::-1]
         ↓
 idx = [1, 2, 0]               ← sorting recipe
         ↓
-eigenvalues[idx]               ← eigenvalues sorted ✅
-eigenvectors[:, idx]           ← columns reordered ✅
+eigenvalues[idx]               ← eigenvalues sorted 
+eigenvectors[:, idx]           ← columns reordered 
         ↓
 eigenvalues = [8.7, 3.2, 0.5]
 eigenvectors columns reordered and correctly paired
