@@ -13,7 +13,7 @@ def center_data (X : np.ndarray):
 def covariance_matrix (X_centered : np.ndarray):
     return np.cov(X_centered, rowvar=False) 
 
-def eigen_decompostition(cov_matrix):
+def eigen_decomposition(cov_matrix):
 
     eigenvalues, eigenvectors = np.linalg.eigh(cov_matrix) # this gives the normalized i.e. unit vectors so we are projecting onto unit eigenvectors
 
