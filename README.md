@@ -315,3 +315,20 @@ Both are geometric.
 
 ---
 
+# Problems I faced in this project
+1. While creating the clusters, I added the offset of [2,2,2] and [-2,-2,-2] to two respective dataset, this resulted in the huge gap for normally distributed cluster soadter PCA compresses this to 2D, the separation was perfectly preserved and logistic regression drew a cleam line with 0 mistakes.
+
+As, I have used **np.random.randn** to create the 3d dataset and its cluster spread is always about 1 unit regardless of offset so the,
+separation = distance between centers / spread of clusters
+So, as the spread of clusters is less and maybe only 2 5 points out of 1000 cross the boundary so accuracy tends to be 100 percentage.
+
+### Solution / Approach I took to solve this,
+- I reduced the mean offset to 0.8 which reduced the test accuracy to 0.95, this is not such significant drop as per the offset i.e. from 2 to 0.8 (not in same ratio but still acceptable) cause the relationship between mean_offset and accuracy is **S-curve**.
+
+- To solve the problem of the spreading, we can manually or explicilty control the spread by multiplying the spread value to the clusters of datasets as : 
+
+spread = 0.5
+cluster_1 = np.random.randn(n_samples, 3) * spread  # tighter cluster
+cluster_1 = np.random.randn(n_samples, 3) * 2.0     # wider cluster
+
+randn was used for the default and convience default to work in the standard baseline.
